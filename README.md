@@ -1,7 +1,7 @@
 # LeetCode_SQL_50
 LeetCode_SQL_50
 
-** SQL LeetCode 50 Interviews with MySQL and Pandas **
+**SQL LeetCode 50 Interviews with MySQL and Pandas**
 
 Project Overview
 
