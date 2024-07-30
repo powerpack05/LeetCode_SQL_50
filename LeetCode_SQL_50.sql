@@ -157,10 +157,110 @@ INSERT INTO Sales (sale_id, product_id, year, quantity, price) VALUES
 (7, 200, 2011, 15, 9000);
 
 
+SELECT p.product_name, s.year, s.price
+FROM Sales s
+JOIN Product p ON s.product_id = p.product_id;
+
+-- ----------------------------------------------------------------------------------------------
+
+-- Q8.) Write a solution to find the IDs of the users who visited without making any 
+-- transactions and the number of times they made these types of visits.
+
+CREATE TABLE Visits(
+visit_id INT PRIMARY KEY,
+customer_id INT);
+
+CREATE TABLE Transactions(
+transaction_id INT PRIMARY KEY,
+	visit_id INT,
+    amount INT,
+    FOREIGN KEY (visit_id) REFERENCES Visits(visit_id));
+    
+    
+INSERT INTO Visits (visit_id, customer_id) VALUES
+(1, 23),
+(2, 9),
+(4, 30),
+(5, 54),
+(6, 96),
+(7, 54),
+(8, 54);
+
+INSERT INTO Transactions (transaction_id, visit_id, amount) VALUES
+(2, 5, 310),
+(3, 5, 300),
+(9, 5, 200),
+(12, 1, 910),
+(13, 2, 970);
 
 
+SELECT customer_id,count(customer_id) as count_no_trans FROM Visits v
+LEFT JOIN Transactions t ON t.visit_id = v.visit_id
+WHERE transaction_id IS NULL
+GROUP BY customer_ids;
 
 
+-- -----------------------------------------------------------------------------------------------------------
+
+-- Q9.)Write a solution to find all dates' Id with higher temperatures compared to its previous dates (yesterday).
+CREATE TABLE Weather(
+id INT PRIMARY KEY,
+recordDate DATE,
+temperature INT
+);
+
+INSERT INTO Weather (id, recordDate, temperature) VALUES 
+(1, '2015-01-01', 10),
+(2, '2015-01-02', 25),
+(3, '2015-01-03', 20),
+(4, '2015-01-04', 30);
+
+SELECT DISTINCT a.Id
+FROM Weather a,Weather b
+WHERE a.temperature>b.temperature
+AND DATEDIFF(a.Recorddate,b.Recorddate) = 1	;
+-- ---------------------------------------------------------------------------------------------------------
+-- Q10. ) Write a solution to find the average time each machine takes to complete a process.
+
+-- The time to complete a process is the 'end' timestamp minus the 'start' timestamp. The average time is calculated by the total time 
+-- to complete every process on the machine divided by the number of processes that were run.
+
+-- The resulting table should have the machine_id along with the average time as processing_time, which should be rounded to 3 decimal places.
+
+CREATE TABLE Activity(
+machine_id INT,
+process_id INT,
+activity_type ENUM('start','end'),
+timestamp FLOAT,
+PRIMARY KEY(machine_id,process_id,activity_type));
 
 
+-- Insert records into the Activity table
+INSERT INTO Activity (machine_id, process_id, activity_type, timestamp) VALUES
+(0, 0, 'start', 0.712),
+(0, 0, 'end', 1.520),
+(0, 1, 'start', 3.140),
+(0, 1, 'end', 4.120),
+(1, 0, 'start', 0.550),
+(1, 0, 'end', 1.550),
+(1, 1, 'start', 0.430),
+(1, 1, 'end', 1.420),
+(2, 0, 'start', 4.100),
+(2, 0, 'end', 4.512),
+(2, 1, 'start', 2.500),
+(2, 1, 'end', 5.000);
+
+
+SELECT * FROM Activity;
+
+WITH CTE AS(
+SELECT machine_id,process_id,
+	(MAX(CASE WHEN activity_type = 'end' THEN timestamp ELSE NULL END) - MAX(CASE WHEN activity_type = 'start' THEN timestamp ELSE NULL END)) as time_difference
+    FROM
+       activity 
+GROUP BY machine_id,process_id	)
+
+SELECT machine_id,ROUND(AVG(time_difference),3) as processing_time FROM cte
+GROUP BY machine_id;
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------
 
