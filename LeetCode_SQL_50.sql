@@ -378,6 +378,41 @@ ORDER BY
     ss.student_id, ss.subject_name;
 
 -- ---------------------------------------------------------------------------------------------------------
+-- Q13.) Managers with at least 5 direct reports.Write a solution to find managers with at least five direct reports.
+
+CREATE TABLE Employeees (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    department VARCHAR(50),
+    managerId INT
+);
+
+
+INSERT INTO Employeees (id, name, department, managerId) VALUES (101, 'John', 'A', NULL);
+INSERT INTO Employeees (id, name, department, managerId) VALUES (102, 'Dan', 'A', 101);
+INSERT INTO Employeees (id, name, department, managerId) VALUES (103, 'James', 'A', 101);
+INSERT INTO Employeees (id, name, department, managerId) VALUES (104, 'Amy', 'A', 101);
+INSERT INTO Employeees (id, name, department, managerId) VALUES (105, 'Anne', 'A', 101);
+INSERT INTO Employeees (id, name, department, managerId) VALUES (106, 'Ron', 'B', 101);
+
+
+SELECT name
+FROM Employeees
+WHERE id IN (
+    SELECT managerId
+    FROM Employeees
+    WHERE managerId IS NOT NULL
+    GROUP BY managerId
+    HAVING COUNT(*) >= 5
+);
+
+-- -----------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
 
 
 
